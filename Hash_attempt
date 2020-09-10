@@ -1,0 +1,247 @@
+#include<stdio.h> 
+#include<limits.h> 
+#include<stdlib.h> 
+#include<string.h> 
+
+
+#define TABLE_SIZE 225 
+
+  
+
+  
+
+struct DataItem { 
+	
+        int dato; 
+
+        int key; 
+
+  
+
+}; 
+
+  
+
+        struct DataItem* arrayhash[TABLE_SIZE]; 
+
+        struct DataItem* dummyitem; 
+
+        struct DataItem* item; 
+
+  
+
+        int hashCode(int key) { 
+
+  
+
+    return key % TABLE_SIZE; 
+
+         
+
+        } 
+
+  
+
+struct DataItem * buscar(int key) { 
+
+  
+
+    int indexhash = hashCode(key); 
+
+  
+
+    while(arrayhash[indexhash] != NULL) { 
+
+    if(arrayhash[indexhash]->key == key) 
+
+        return arrayhash[indexhash]; 
+
+     
+
+    ++indexhash; 
+
+  
+
+    indexhash %= TABLE_SIZE; 
+
+    } 
+
+  
+
+return NULL;     
+
+} 
+
+  
+
+void insert(int key, int dato) { 
+
+  
+
+struct DataItem *item = (struct DataItem*) malloc(sizeof(struct DataItem)); 
+
+    item -> dato= dato; 
+
+    item -> key= key; 
+
+  
+
+    int indexhash =hashCode(key); 
+
+        while(arrayhash[indexhash]!= NULL && arrayhash[indexhash]-> key != -1) { 
+
+        ++indexhash; 
+
+  
+
+        indexhash %= TABLE_SIZE; 
+
+        } 
+
+            arrayhash[indexhash] = item; 
+
+} 
+
+  
+
+struct DataItem* delete(struct DataItem* item) { 
+
+  
+
+    int key= item ->key; 
+
+  
+
+    int indexhash= hashCode(key); 
+
+  
+
+    while (arrayhash[indexhash] != NULL) { 
+
+    if(arrayhash[indexhash]->key == key) { 
+
+        struct DataItem* temp =arrayhash[indexhash]; 
+
+  
+
+        arrayhash[indexhash]= dummyitem; 
+
+        return temp; 
+
+    } 
+
+    ++indexhash; 
+
+    indexhash %= TABLE_SIZE; 
+
+} 
+
+  
+
+return NULL; 
+
+} 
+
+  
+
+void display () { 
+
+  
+
+    int i=0; 
+
+  
+
+    for(i=0; i<TABLE_SIZE; i++) { 
+
+    if(arrayhash[i] != NULL) 
+
+        printf("(%d,%d)", arrayhash[i]->key,arrayhash[i]->dato); 
+
+    else 
+
+        printf("--"); 
+
+    } 
+
+    printf("\n");     
+
+} 
+
+  
+
+  
+
+int main (){ 
+
+dummyitem= (struct DataItem*) malloc(sizeof(struct DataItem)); 
+
+        dummyitem->dato= -1; 
+
+        dummyitem->key= -1; 
+
+  
+
+    insert(1,20); 
+
+    insert(2,70); 
+
+    insert(42,80); 
+
+    insert(4,25);     
+
+    insert(12,44); 
+
+    insert(14,32); 
+
+    insert(17,11); 
+
+    insert(13,78); 
+
+    insert(37,97); 
+
+     
+
+    display(); 
+
+    item =buscar(2); 
+
+    if(item != NULL) { 
+
+        printf("Encontrado: %d \n", item->dato); 
+
+        } else { 
+
+            printf("No encontrado. \n"); 
+
+        } 
+
+} 
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+ 
