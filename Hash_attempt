@@ -1,247 +1,176 @@
 #include<stdio.h> 
-#include<limits.h> 
 #include<stdlib.h> 
 #include<string.h> 
-
-
-#define TABLE_SIZE 225 
-
-  
-
-  
-
+ 
 struct DataItem { 
-	
-        int dato; 
-
+        int data; 
         int key; 
-
-  
+	struct DataItem * next;
 
 }; 
+  int hashCode(int key, int size) { 
 
-  
+	key= key % size;
+      return key; 
+  }
+struct DataItem * init_table (int size){
+	
+	struct DataItem * aux;
 
-        struct DataItem* arrayhash[TABLE_SIZE]; 
 
-        struct DataItem* dummyitem; 
+	struct DataItem * head = (struct DataItem*) malloc(sizeof(struct DataItem));
+	aux= head;
 
-        struct DataItem* item; 
+	aux->key = -100;	
+	aux->data= 0;	
+	for(int i=1; i<size;i++){
+	struct DataItem *item =(struct DataItem*) malloc(sizeof(struct DataItem));
+	item->next =NULL;
+	aux->next= item;
+	aux = item;
+	aux->key= -100;
+		}
 
-  
+return head;
+		
+}
 
-        int hashCode(int key) { 
+struct DataItem * insert(struct DataItem * table, int key, int data, int size, int *a) {
+		struct DataItem * aux = table;
+		struct DataItem *auxcoll = table;
+		int hashed = hashCode(key,size);
+	
+	int o= 0;
 
-  
+for(o;o<size;o++){
+		if (hashed == o) {
+			if (aux->key == -100) {
+				aux->key = key;
+				aux->data = data;
+				*a++;
+			//	printf("Entramos raza \n");
+				break;
+			}	
+			else {
+				printf("colison\n");
+				if (*a== size){
+					printf("La Tabla esta llena");	
+					break;}
+				int b=*a;	
+			       	while (*a==b){
+			 	if(auxcoll->key == -100){
+				auxcoll->key= key;
+				auxcoll->data= data;
+				b++;
+				
+				}
+			
+					auxcoll= auxcoll->next;
+				}
+			break;						
+			}
 
-    return key % TABLE_SIZE; 
+       		}
 
-         
+	aux= aux->next;	
+}
 
-        } 
+//prinntf("%d, %d \n", aux->key, aux->data);	
 
-  
+	return table;
 
-struct DataItem * buscar(int key) { 
+}
 
-  
+void display(struct DataItem * table, int size) {
+struct DataItem * aux= table;
 
-    int indexhash = hashCode(key); 
-
-  
-
-    while(arrayhash[indexhash] != NULL) { 
-
-    if(arrayhash[indexhash]->key == key) 
-
-        return arrayhash[indexhash]; 
-
-     
-
-    ++indexhash; 
-
-  
-
-    indexhash %= TABLE_SIZE; 
-
-    } 
-
-  
-
-return NULL;     
-
+	for(int v=0; v<size;v++){
+		printf("%d, %d \n",aux->key, aux->data);
+					aux= aux->next;
+}
 } 
 
-  
-
-void insert(int key, int dato) { 
-
-  
-
-struct DataItem *item = (struct DataItem*) malloc(sizeof(struct DataItem)); 
-
-    item -> dato= dato; 
-
-    item -> key= key; 
-
-  
-
-    int indexhash =hashCode(key); 
-
-        while(arrayhash[indexhash]!= NULL && arrayhash[indexhash]-> key != -1) { 
-
-        ++indexhash; 
-
-  
-
-        indexhash %= TABLE_SIZE; 
-
-        } 
-
-            arrayhash[indexhash] = item; 
-
-} 
-
-  
-
-struct DataItem* delete(struct DataItem* item) { 
-
-  
-
-    int key= item ->key; 
-
-  
-
-    int indexhash= hashCode(key); 
-
-  
-
-    while (arrayhash[indexhash] != NULL) { 
-
-    if(arrayhash[indexhash]->key == key) { 
-
-        struct DataItem* temp =arrayhash[indexhash]; 
-
-  
-
-        arrayhash[indexhash]= dummyitem; 
-
-        return temp; 
-
-    } 
-
-    ++indexhash; 
-
-    indexhash %= TABLE_SIZE; 
-
-} 
-
-  
-
-return NULL; 
-
-} 
-
-  
-
-void display () { 
-
-  
-
-    int i=0; 
-
-  
-
-    for(i=0; i<TABLE_SIZE; i++) { 
-
-    if(arrayhash[i] != NULL) 
-
-        printf("(%d,%d)", arrayhash[i]->key,arrayhash[i]->dato); 
-
-    else 
-
-        printf("--"); 
-
-    } 
-
-    printf("\n");     
-
-} 
-
-  
-
-  
-
-int main (){ 
-
-dummyitem= (struct DataItem*) malloc(sizeof(struct DataItem)); 
-
-        dummyitem->dato= -1; 
-
-        dummyitem->key= -1; 
-
-  
-
-    insert(1,20); 
-
-    insert(2,70); 
-
-    insert(42,80); 
-
-    insert(4,25);     
-
-    insert(12,44); 
-
-    insert(14,32); 
-
-    insert(17,11); 
-
-    insert(13,78); 
-
-    insert(37,97); 
-
-     
-
-    display(); 
-
-    item =buscar(2); 
-
-    if(item != NULL) { 
-
-        printf("Encontrado: %d \n", item->dato); 
-
-        } else { 
-
-            printf("No encontrado. \n"); 
-
-        } 
-
-} 
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
+struct DataItem * search(struct DataItem *table,int key,int size) { 
+	int hashed = hashCode(key,size);
+	struct DataItem * auxcoll = table;
+	struct DataItem * aux=table;
+	int o= 0;
+
+for(o;o<size;o++){
+		if (hashed == o) {
+			if (aux->key != -100) {
+				if (aux->key == key){
+				return aux;
+				}
+				else {
+				struct DataItem * aux= table;
+
+					for(int v=0; v<size;v++){
+					if (auxcoll->key == key){
+					return aux;	
+					}
+					}
+				
+				
+				}	
+			}	
+			else {
+				
+			//	printf("No existe\n");									
+				return NULL;
+			}
+
+       		}
+
+	aux= aux->next;	
+}
+  return NULL;
+}
  
+void delete(struct DataItem* table,int key,int size ) { 
+  
+    struct DataItem *aux= search(table,key,size);
+ if(aux == NULL){
+ printf("No fue posible borrar el dato, no existe\n");
+ }
+ else {
+	aux->data = 0;
+   	aux->key= -100; 
+ }	
+} 
+
+
+int main () { 
+	int a=0;
+  struct DataItem *table =NULL;	
+	int size= 10;
+
+	printf("Inserte el tamaño de la tabla\n");
+	scanf("%d",&size);
+table = init_table(size);
+table = insert(table,4,6,size,&a);
+table = insert(table,17,7,size,&a);
+table = insert(table,2,3,size,&a);
+table = insert(table,1,9,size,&a);
+table = insert(table,3,8,size,&a);
+table = insert(table,5,2,size,&a);
+table = insert(table,6,89,size,&a);
+table = insert(table,7,65,size,&a);
+//table = insert(table,8,3234,size,&a);
+table = insert(table,9,491,size,&a);
+//table = insert(table,0,865,size,&a);
+
+display(table,size);
+
+struct DataItem * searched =search(table,80,size);
+if (searched != NULL){
+printf("\n %d \n",searched->data);
+}
+else {
+printf("Dato no encontrado \n");
+}
+delete(table,55,size);
+
+display(table,size);
+}
+  
